@@ -1,18 +1,12 @@
 % 2-D HIO written by Po-Nan Li @ Academia Sinica 2012
-function R = hio2d(varargin)
+function R = hio2d(Fabs, S, n, unknown, alpha)
     
     Fabs = varargin{1};
     S    = varargin{2};
     n    = varargin{3};
 
-    if length(varargin) > 3
-        unknown = varargin{4};
-    else
-        unknown = false(size(Fabs));
-    end
     % OSS module
-    if length(varargin) > 4
-        alpha = varargin{5};
+    if nargin < 5
         oss = true;
         x = -round((length(Fabs)-1)/2):round((length(Fabs)-1)/2);
         [X, Y] = meshgrid(x, x);
@@ -22,7 +16,9 @@ function R = hio2d(varargin)
         oss = false;
     end
     % solve unknown pixels in data
-    
+    if nargin < 4 
+        unknown = false(size(Fabs));
+    end
     
     beta1 = 0.9;
     
