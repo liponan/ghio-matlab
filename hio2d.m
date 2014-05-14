@@ -1,5 +1,5 @@
 % 2-D HIO written by Po-Nan Li @ Academia Sinica 2012
-function R = hio2d(varargin)
+function R = hio2d(varargin) % Fabs, S, rep, unknown, alpha
     
     Fabs = varargin{1};
     S    = varargin{2};

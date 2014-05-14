@@ -1,3 +1,5 @@
+% 2-D Guided-HIO written by Po-Nan Li @ Academia Sinica 2012
+% Reference: Chen et al., Phys. Rev. B. 76, 064113 (2007).
 function R = ghio2d(Fabs, S, n, gen, rep, checker, alpha)
     R = zeros(size(Fabs,1), size(Fabs,2), gen);
     G = zeros(size(Fabs,1), size(Fabs,2), rep);
@@ -7,11 +9,11 @@ function R = ghio2d(Fabs, S, n, gen, rep, checker, alpha)
         disp(['in generation #' int2str(g)]);
         if g == 1
             parfor r = 1:rep
-                G(:,:,r) = hio2d(Fabs, S, n, gen, rep, checker, alpha);
+                G(:,:,r) = hio2d(Fabs, S, n, checker, alpha);
             end
         else
             parfor r = 1:rep
-                G(:,:,r) = hio2d(fft2(G(:,:,r)), S, n, gen, rep, checker, alpha);
+                G(:,:,r) = hio2d(fft2(G(:,:,r)), S, n, checker, alpha);
             end
         end
         FG = fft2(G);
