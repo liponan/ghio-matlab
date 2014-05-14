@@ -13,6 +13,7 @@ function R = hio2d(varargin)
     % OSS module
     if length(varargin) > 4
         alpha = varargin{5};
+        disp(['OSS is on. alpha = ' num2str(alpha)]);
         oss = true;
         x = -round((length(Fabs)-1)/2):round((length(Fabs)-1)/2);
         [X, Y] = meshgrid(x, x);
