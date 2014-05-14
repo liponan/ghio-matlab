@@ -1,18 +1,15 @@
 % 2-D HIO written by Po-Nan Li @ Academia Sinica 2012
-function R = hio2d(varargin) % Fabs, S, rep, unknown, alpha
+function R = hio2d(Fabs, S, n, varargin) % Fabs, S, n, unknown, alpha
     
-    Fabs = varargin{1};
-    S    = varargin{2};
-    n    = varargin{3};
 
-    if length(varargin) > 3
-        unknown = varargin{4};
+    if length(varargin) > 0
+        unknown = varargin{1};
     else
         unknown = false(size(Fabs));
     end
     % OSS module
-    if length(varargin) > 4
-        alpha = varargin{5};
+    if length(varargin) > 1
+        alpha = varargin{2};
         disp(['OSS is on. alpha = ' num2str(alpha)]);
         oss = true;
         x = -round((length(Fabs)-1)/2):round((length(Fabs)-1)/2);
