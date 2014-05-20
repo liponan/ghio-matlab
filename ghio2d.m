@@ -4,7 +4,7 @@ function R = ghio2d(Fabs, S, n, gen, rep, checker, alpha)
     R = zeros(size(Fabs,1), size(Fabs,2), gen);
     G = zeros(size(Fabs,1), size(Fabs,2), rep);
     efs = zeros(rep, 1);
-    sh = floor(sqrt(numel(find(S==1)))/2);
+    sh = floor(sqrt(numel(find(S==1)))/2); % maximun shift
     for g = 1:gen
         disp(['in generation #' int2str(g)]);
         if g == 1

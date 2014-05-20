@@ -2,10 +2,10 @@
 function R = hio2d(Fabs, S, n, varargin) % Fabs, S, n, unknown, alpha
     
 
-    if length(varargin) > 0
-        unknown = varargin{1};
-    else
+    if isempty(varargin)
         unknown = false(size(Fabs));
+    else
+        unknown = varargin{1};
     end
     % OSS module
     if length(varargin) > 1
