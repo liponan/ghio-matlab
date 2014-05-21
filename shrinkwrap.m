@@ -21,7 +21,7 @@ end
 R(:,:,1) = hio2d(Fabs, S, n, checker, alpha);
 
 % make Gaussian kernel
-fwhm = 3;
+fwhm = 7;
 sig = fwhm / 2.355;
 x = (1:size(S,2)) - size(S,2)/2;
 y = (1:size(S,1)) - size(S,1)/2;
@@ -33,7 +33,7 @@ rad = sqrt(X.^2 + Y.^2);
 for g = 1:gen
     G = exp(-(rad./sqrt(2)./sig).^2);
     M = fftshift( ifft2( fft2(R(:,:,g)) .* fft2(G), 'symmetric') );
-    Sup(:,:,g+1) = ( M >= 0.2*max(max(R(:,:,g))) );
+    Sup(:,:,g+1) = ( M >= 0.05*max(M(:)) );
     R(:,:,g+1) = hio2d(fft2(R(:,:,g)), Sup(:,:,g+1), n2, checker, alpha);
     sig = sig * 0.99;
 end
