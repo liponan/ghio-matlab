@@ -1,8 +1,8 @@
 % 2-D HIO written by Po-Nan Li @ Academia Sinica 2012
 function [R, Sup, M] = shrinkwrap(Fabs, S, n, checker, gen, n2, varargin) % Fabs, S, n, unknown, alpha
 
-% S = fftshift( ifft2(Fabs, 'symmetric') );
-% S = S > 0.04*max(S(:));
+S = fftshift( ifft2(abs(Fabs).^2, 'symmetric') );
+S = S > 0.04*max(S(:));
 
 
 % pre-allocated spaces
@@ -33,7 +33,7 @@ rad = sqrt(X.^2 + Y.^2);
 for g = 1:gen
     G = exp(-(rad./sqrt(2)./sig).^2);
     M = fftshift( ifft2( fft2(R(:,:,g)) .* fft2(G), 'symmetric') );
-    Sup(:,:,g+1) = ( M >= 0.1*max(max(R(:,:,g))) );
+    Sup(:,:,g+1) = ( M >= 0.2*max(max(R(:,:,g))) );
     R(:,:,g+1) = hio2d(fft2(R(:,:,g)), Sup(:,:,g+1), n2, checker, alpha);
     sig = sig * 0.99;
 end
