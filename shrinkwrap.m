@@ -40,7 +40,7 @@ Sup(:,:,1) = S;
 
 
 
-% first run with given support
+% first run with initial support from auto-correlation map
 R(:,:,1) = hio2d(Fabs, S, n, checker, alpha);
 
 % make Gaussian kernel
