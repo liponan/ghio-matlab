@@ -20,7 +20,7 @@ Developed by Chien-Chun Chen *et al*. when he was in Institute of Physics in Aca
 
 Developed by S. Marchesini *et al*. [4].
 
-# Reference
+# References
 
 [1] J.R. Fienup, Appl. Opt. **21**, 2758 (1982).
 
