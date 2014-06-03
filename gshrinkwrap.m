@@ -1,11 +1,12 @@
-% [R, Sup, M] = shrinkwrap(Fabs, n, checker, gen, n2, varargin) 
+% [R, Sup, M] = gshrinkwrap(Fabs, n, checker, gen, n2, rep, varargin) 
 % varargin = {alpha, sigma, cutoff1, cutoff2}
-% shrink-wrap 2-D HIO written by Po-Nan Li @ Academia Sinica 2014
+% GUIDED shrink-wrap 2-D HIO written by Po-Nan Li @ Academia Sinica 2014
 % reference: Marchesini et al., 
-%  ¡§X-ray image reconstruction from a diffraction pattern alone,¡¨
-%   Phys. Rev. B 68, 140101 (2003).
+%    ¡§X-ray image reconstruction from a diffraction pattern alone,¡¨
+%     Phys. Rev. B 68, 140101 (2003).
+% v.1 2014/06/03
 
-function [R, Sup, M] = gshrinkwrap(Fabs, n, checker, gen, n2, varargin) 
+function [R, Sup, M] = gshrinkwrap(Fabs, n, checker, gen, n2, rep, varargin) 
 
 
 % default parameters;
@@ -37,9 +38,21 @@ R   = zeros( size(Fabs, 1), size(Fabs, 2), gen+1);
 Sup = false( size(Fabs, 1), size(Fabs, 2), gen+1);
 Sup(:,:,1) = S;
 
+% pre-allocated spaces for parallel
+Rtmp = zeros( size(Fabs, 1), size(Fabs, 2), rep);
+Ftmp = zeros( size(Fabs, 1), size(Fabs, 2), rep);
+efs = zeros(1, rep);
+
 
 % first run with initial support from auto-correlation map
-R(:,:,1) = hio2d(Fabs, S, n, checker, alpha);
+parfor r = 1:rep
+    Rtmp(:,:,r) = hio2d(Fabs, S, n, checker, alpha);
+    Ftmp(:,:,r) = fft2( Rtmp(:,:,r) );
+    efs(r) = ef(Fabs, Ftmp(:,:,r), Fabs == 0), 
+end
+[my, mx] = min(efs);
+disp(['replica #' int2str(mx) ' with EF = ' num2str(my) ' selected']);
+R(:,:,1) = Rtmp(:,:,mx);
 
 % make Gaussian kernel
 % fwhm = 8;
