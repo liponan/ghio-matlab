@@ -1,5 +1,5 @@
 % 2-D HIO written by Po-Nan Li @ Academia Sinica 2012
-function [R, Sup, M] = shrinkwrap(Fabs, S, n, checker, gen, n2, varargin) % Fabs, S, n, unknown, alpha
+function [R, Sup, M] = shrinkwrap(Fabs, n, checker, gen, n2, varargin) 
 
 S = fftshift( ifft2(abs(Fabs).^2, 'symmetric') );
 S = S > 0.04*max(S(:));
@@ -33,7 +33,7 @@ rad = sqrt(X.^2 + Y.^2);
 for g = 1:gen
     G = exp(-(rad./sqrt(2)./sig).^2);
     M = fftshift( ifft2( fft2(R(:,:,g)) .* fft2(G), 'symmetric') );
-    Sup(:,:,g+1) = ( M >= 0.1*max(M(:)) );
+    Sup(:,:,g+1) = ( M >= 0.05*max(M(:)) );
     R(:,:,g+1) = hio2d(fft2(R(:,:,g)), Sup(:,:,g+1), n2, checker, alpha);
     if sig > 1.5
         sig = sig * 0.99;
