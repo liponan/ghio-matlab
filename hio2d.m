@@ -8,7 +8,7 @@ function R = hio2d(Fabs, S, n, varargin) % Fabs, S, n, unknown, alpha
         unknown = varargin{1};
     end
     % OSS module
-    if length(varargin) > 1
+    if length(varargin) > 1 && ~isempty( varargin{2} )
         alpha = varargin{2};
         disp(['OSS is on. alpha = ' num2str(alpha)]);
         oss = true;
