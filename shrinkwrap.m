@@ -1,4 +1,8 @@
 % 2-D HIO written by Po-Nan Li @ Academia Sinica 2012
+% reference: Marchesini et al., 
+%  ¡§X-ray image reconstruction from a diffraction pattern alone,¡¨
+%   Phys. Rev. B 68, 140101 (2003).
+
 function [R, Sup, M] = shrinkwrap(Fabs, n, checker, gen, n2, varargin) 
 
 S = fftshift( ifft2(abs(Fabs).^2, 'symmetric') );
@@ -21,8 +25,9 @@ end
 R(:,:,1) = hio2d(Fabs, S, n, checker, alpha);
 
 % make Gaussian kernel
-fwhm = 8;
-sig = fwhm / 2.355;
+% fwhm = 8;
+% sig = fwhm / 2.355;
+sig = 3;
 x = (1:size(S,2)) - size(S,2)/2;
 y = (1:size(S,1)) - size(S,1)/2;
 [X, Y] = meshgrid(x, y);
