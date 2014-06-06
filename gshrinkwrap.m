@@ -54,7 +54,7 @@ efs = zeros(1, rep);
 parfor r = 1:rep
     Rtmp(:,:,r) = hio2d(Fabs, S, n, checker, alpha);
     Ftmp(:,:,r) = fft2( Rtmp(:,:,r) );
-    efs(r) = ef(Fabs, Ftmp(:,:,r), Fabs == 0), 
+    efs(r) = ef(Fabs, Ftmp(:,:,r), checker), 
 end
 [my, mx] = min(efs);
 disp('seed:');
@@ -79,7 +79,7 @@ for g = 1:gen
         Rtmp(:,:,r) = hio2d(fft2(Rtmp(:,:,r)), Stmp(:,:,r), n2, checker, alpha);
         % Fourier transform for EF
         Ftmp(:,:,r) = fft2( Rtmp(:,:,r) );
-        efs(r) = ef(Fabs, Ftmp(:,:,r), Fabs == 0), 
+        efs(r) = ef(Fabs, Ftmp(:,:,r), checker), 
     end
     % EF analysis
     [my, mx] = min(efs);
