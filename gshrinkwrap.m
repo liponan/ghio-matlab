@@ -57,6 +57,7 @@ parfor r = 1:rep
     efs(r) = ef(Fabs, Ftmp(:,:,r), Fabs == 0), 
 end
 [my, mx] = min(efs);
+disp('seed:');
 disp(['replica #' int2str(mx) ' with EF = ' num2str(my) ' selected']);
 R(:,:,1) = Rtmp(:,:,mx);
 
@@ -76,10 +77,16 @@ for g = 1:gen
         Mtmp(:,:,r) = fftshift( ifft2( fft2(Rtmp(:,:,r)) .* fft2(G), 'symmetric') );
         Stmp(:,:,r) = ( Mtmp(:,:,r) >= cutoff2*max(max(Mtmp(:,:,r))) );
         Rtmp(:,:,r) = hio2d(fft2(Rtmp(:,:,r)), Stmp(:,:,r), n2, checker, alpha);
-        
+        % Fourier transform for EF
+        Ftmp(:,:,r) = fft2( Rtmp(:,:,r) );
+        efs(r) = ef(Fabs, Ftmp(:,:,r), Fabs == 0), 
     end
-    R(:,:,g+1) = Rtmp(:,:,1);
-    Sup(:,:,g+1) = Stmp(:,:,1);
+    % EF analysis
+    [my, mx] = min(efs);
+    disp(['after generation ' int2str(g) ':']);
+    disp(['replica #' int2str(mx) ' with EF = ' num2str(my) ' selected']);
+    R(:,:,g+1) = Rtmp(:,:,mx);
+    Sup(:,:,g+1) = Stmp(:,:,mx);
     
     if sig > 1.5
         sig = sig * 0.99;
