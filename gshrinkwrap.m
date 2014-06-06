@@ -1,10 +1,14 @@
 % [R, Sup, M] = gshrinkwrap(Fabs, n, checker, gen, n2, rep, varargin) 
 % varargin = {alpha, sigma, cutoff1, cutoff2}
 % GUIDED shrink-wrap 2-D HIO written by Po-Nan Li @ Academia Sinica 2014
-% reference: Marchesini et al., 
+% reference: 
+% [1] Marchesini et al., 
 %    ¡§X-ray image reconstruction from a diffraction pattern alone,¡¨
 %     Phys. Rev. B 68, 140101 (2003).
-% v.1 2014/06/03
+% [2] Chen et al.,
+%     
+% v.1 2014/06/03 : multiple seed
+% v.2 2014/06/06 : multiple following runs
 
 function [R, Sup, M] = gshrinkwrap(Fabs, n, checker, gen, n2, rep, varargin) 
 
@@ -41,6 +45,8 @@ Sup(:,:,1) = S;
 % pre-allocated spaces for parallel
 Rtmp = zeros( size(Fabs, 1), size(Fabs, 2), rep);
 Ftmp = zeros( size(Fabs, 1), size(Fabs, 2), rep);
+Mtmp = zeros( size(Fabs, 1), size(Fabs, 2), rep);
+Stmp = false( size(Fabs, 1), size(Fabs, 2), rep);
 efs = zeros(1, rep);
 
 
@@ -65,12 +71,19 @@ rad = sqrt(X.^2 + Y.^2);
 
 % shrink-wrap
 for g = 1:gen
-    G = exp(-(rad./sqrt(2)./sig).^2);
-    M = fftshift( ifft2( fft2(R(:,:,g)) .* fft2(G), 'symmetric') );
-    Sup(:,:,g+1) = ( M >= cutoff2*max(M(:)) );
-    R(:,:,g+1) = hio2d(fft2(R(:,:,g)), Sup(:,:,g+1), n2, checker, alpha);
+    parfor r = 1:rep
+        G = exp(-(rad./sqrt(2)./sig).^2);
+        Mtmp(:,:,r) = fftshift( ifft2( fft2(Rtmp(:,:,r)) .* fft2(G), 'symmetric') );
+        Stmp(:,:,r) = ( Mtmp(:,:,r) >= cutoff2*max(max(Mtmp(:,:,r))) );
+        Rtmp(:,:,r) = hio2d(fft2(Rtmp(:,:,r)), Stmp(:,:,r), n2, checker, alpha);
+        
+    end
+    R(:,:,g+1) = Rtmp(:,:,1);
+    Sup(:,:,g+1) = Stmp(:,:,1);
+    
     if sig > 1.5
         sig = sig * 0.99;
     end
 end
-    
+
+M = Mtmp(:,:,1);
