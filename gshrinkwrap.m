@@ -56,14 +56,14 @@ parfor r = 1:rep
     Ftmp(:,:,r) = fft2( Rtmp(:,:,r) );
     efs(r) = ef(Fabs, Ftmp(:,:,r), checker), 
 end
+
+% select best replica
 [my, mx] = min(efs);
 disp('seed:');
 disp(['replica #' int2str(mx) ' with EF = ' num2str(my) ' selected']);
 R(:,:,1) = Rtmp(:,:,mx);
 
 % make Gaussian kernel
-% fwhm = 8;
-% sig = fwhm / 2.355;
 x = (1:size(S,2)) - size(S,2)/2;
 y = (1:size(S,1)) - size(S,1)/2;
 [X, Y] = meshgrid(x, y);
@@ -75,13 +75,14 @@ for g = 1:gen
     Rmodel = R(:,:,g);
     Rmodel( Rmodel < 0 ) = 0; % just in case
     Rtmp( Rtmp < 0 ) = 0;
+    G = fft2(exp(-(rad./sqrt(2)./sig).^2));
     parfor r = 1:rep
         % real-space improvement 
         Rtmp(:,:,r) = myalign( Rmodel, Rtmp(:,:,r) );
         Rtmp(:,:,r) = sqrt( Rtmp(:,:,r) .* Rmodel );
         % make new support
-        G = exp(-(rad./sqrt(2)./sig).^2);
-        Mtmp(:,:,r) = fftshift( ifft2( fft2(Rtmp(:,:,r)) .* fft2(G), 'symmetric') );
+        
+        Mtmp(:,:,r) = fftshift( ifft2( fft2(Rtmp(:,:,r)) .* G, 'symmetric') );
         Stmp(:,:,r) = ( Mtmp(:,:,r) >= cutoff2*max(max(Mtmp(:,:,r))) );
         % run hio
         Rtmp(:,:,r) = hio2d(fft2(Rtmp(:,:,r)), Stmp(:,:,r), n2, checker, alpha);
