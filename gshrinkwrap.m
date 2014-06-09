@@ -72,10 +72,18 @@ rad = sqrt(X.^2 + Y.^2);
 
 % shrink-wrap
 for g = 1:gen
+    Rmodel = R(:,:,g);
+    Rmodel( Rmodel < 0 ) = 0; % just in case
+    Rtmp( Rtmp < 0 ) = 0;
     parfor r = 1:rep
+        % real-space improvement 
+        Rtmp(:,:,r) = myalign( Rmodel, Rtmp(:,:,r) );
+        Rtmp(:,:,r) = sqrt( Rtmp(:,:,r) .* Rmodel );
+        % make new support
         G = exp(-(rad./sqrt(2)./sig).^2);
         Mtmp(:,:,r) = fftshift( ifft2( fft2(Rtmp(:,:,r)) .* fft2(G), 'symmetric') );
         Stmp(:,:,r) = ( Mtmp(:,:,r) >= cutoff2*max(max(Mtmp(:,:,r))) );
+        % run hio
         Rtmp(:,:,r) = hio2d(fft2(Rtmp(:,:,r)), Stmp(:,:,r), n2, checker, alpha);
         % Fourier transform for EF
         Ftmp(:,:,r) = fft2( Rtmp(:,:,r) );
@@ -94,3 +102,4 @@ for g = 1:gen
 end
 
 M = Mtmp(:,:,1);
+
