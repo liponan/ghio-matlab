@@ -9,6 +9,7 @@
 %     
 % v.1 2014/06/03 : multiple seed
 % v.2 2014/06/06 : multiple following runs
+% v.3 2014/06/09 : use "template" to update each replica
 
 function [R, Sup, M] = gshrinkwrap(Fabs, n, checker, gen, n2, rep, varargin) 
 
