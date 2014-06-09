@@ -7,13 +7,11 @@
 
 function [R, Sup, M] = shrinkwrap(Fabs, n, checker, gen, n2, varargin) 
 
-
 % default parameters;
 alpha = [];
 sig = 3;
 cutoff1 = 0.04;
 cutoff2 = 0.2;
-
 
 % handle additional aruguments
 if ~isempty(varargin)
@@ -37,20 +35,14 @@ R   = zeros( size(Fabs, 1), size(Fabs, 2), gen+1);
 Sup = false( size(Fabs, 1), size(Fabs, 2), gen+1);
 Sup(:,:,1) = S;
 
-
-
-
 % first run with initial support from auto-correlation map
 R(:,:,1) = hio2d(Fabs, S, n, checker, alpha);
 
 % make Gaussian kernel
-% fwhm = 8;
-% sig = fwhm / 2.355;
 x = (1:size(S,2)) - size(S,2)/2;
 y = (1:size(S,1)) - size(S,1)/2;
 [X, Y] = meshgrid(x, y);
 rad = sqrt(X.^2 + Y.^2);
-
 
 % shrink-wrap
 for g = 1:gen
