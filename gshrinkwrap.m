@@ -74,20 +74,18 @@ rad = sqrt(X.^2 + Y.^2);
 % shrink-wrap
 for g = 1:gen
     Rmodel = R(:,:,g);
-    % Rmodel( Rmodel < 0 ) = 0; % just in case
-    % Rtmp( Rtmp < 0 ) = 0;
-    
+    G = fft2(exp(-(rad./sqrt(2)./sig).^2));
+    % make new support
+    M = fftshift( ifft2( fft2(Rmodel) .* G, 'symmetric') );
+    S = ( M >= cutoff2 * max(max(M)) );
+    % run with many replica
     parfor r = 1:rep
         % real-space improvement 
         Rtmp(:,:,r) = myalign( Rmodel, Rtmp(:,:,r) );
-        Rtmp(:,:,r) = sign( Rmodel )...
+        Rtmp(:,:,r) = sign( Rtmp(:,:,r) )...
          .* sqrt( abs( Rtmp(:,:,r) .* Rmodel ) );
-        G = fft2(exp(-(rad./sqrt(2)./sig).^2));
-        % make new support
-        Mtmp(:,:,r) = fftshift( ifft2( fft2(Rtmp(:,:,r)) .* G, 'symmetric') );
-        Stmp(:,:,r) = ( Mtmp(:,:,r) >= cutoff2*max(max(Mtmp(:,:,r))) );
         % run hio
-        Rtmp(:,:,r) = hio2d(fft2(Rtmp(:,:,r)), Stmp(:,:,r), n2, checker, alpha);
+        Rtmp(:,:,r) = hio2d(fft2(Rtmp(:,:,r)), S, n2, checker, alpha);
         % Fourier transform for EF
         Ftmp(:,:,r) = fft2( Rtmp(:,:,r) );
         efs(r) = ef(Fabs, Ftmp(:,:,r), checker), 
@@ -97,7 +95,7 @@ for g = 1:gen
     disp(['after generation ' int2str(g) ':']);
     disp(['replica #' int2str(mx) ' with EF = ' num2str(my) ' selected']);
     R(:,:,g+1) = Rtmp(:,:,mx);
-    Sup(:,:,g+1) = Stmp(:,:,mx);
+    Sup(:,:,g+1) = S;
     % smaller the kernel size
     if sig > 1.5
         sig = sig * 0.99;
