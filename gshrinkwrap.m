@@ -80,7 +80,7 @@ for g = 1:gen
     parfor r = 1:rep
         % real-space improvement 
         Rtmp(:,:,r) = myalign( Rmodel, Rtmp(:,:,r) );
-        Rtmp(:,:,r) = sign( Rmodel )...
+        Rtmp(:,:,r) = sign( Rtmp(:,:,r) )...
          .* sqrt( abs( Rtmp(:,:,r) .* Rmodel ) );
         G = fft2(exp(-(rad./sqrt(2)./sig).^2));
         % make new support
