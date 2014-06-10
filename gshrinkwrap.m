@@ -3,15 +3,15 @@
 % GUIDED shrink-wrap 2-D HIO written by Po-Nan Li @ Academia Sinica 2014
 % reference: 
 % [1] Marchesini et al., 
-%    ¡§X-ray image reconstruction from a diffraction pattern alone,¡¨
+%     "X-ray image reconstruction from a diffraction pattern alone,"
 %     Phys. Rev. B 68, 140101 (2003).
-% [2] Chen et al.,
+% [2] Chen et al., Phys. Rev. B 76, 064113 (2007).
 %     
 % v.1 2014/06/03 : multiple seed
 % v.2 2014/06/06 : multiple following runs
 % v.3 2014/06/09 : use "template" to update each replica
 
-function [R, Sup, M] = gshrinkwrap(Fabs, n, checker, gen, n2, rep, varargin) 
+function [R, Sup, Rtmp] = gshrinkwrap(Fabs, n, checker, gen, n2, rep, varargin) 
 
 
 % default parameters;
@@ -80,7 +80,8 @@ for g = 1:gen
     parfor r = 1:rep
         % real-space improvement 
         Rtmp(:,:,r) = myalign( Rmodel, Rtmp(:,:,r) );
-        Rtmp(:,:,r) = sign(Rmodel) .* sqrt( abs( Rtmp(:,:,r) .* Rmodel ) );
+        Rtmp(:,:,r) = sign( Rmodel )...
+         .* sqrt( abs( Rtmp(:,:,r) .* Rmodel ) );
         G = fft2(exp(-(rad./sqrt(2)./sig).^2));
         % make new support
         Mtmp(:,:,r) = fftshift( ifft2( fft2(Rtmp(:,:,r)) .* G, 'symmetric') );
@@ -103,5 +104,4 @@ for g = 1:gen
     end
 end
 
-M = Mtmp(:,:,mx);
 
