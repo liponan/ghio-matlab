@@ -21,12 +21,12 @@ function R = ghio2d(Fabs, S, n, gen, rep, checker, alpha)
             efs(r) = ef(Fabs, FG(:,:,r), checker);
         end
         [min_ef, min_ind] = min(efs);
-        disp(['replica #' int2str(min_ind) ' selected (EF = ' num2str(min_ef) ')']);
+        disp(['replica1 #' int2str(min_ind) ' selected (EF = ' num2str(min_ef) ')']);
         GM = G(:,:,min_ind);
         GM(GM<0) = 0;
         parfor r = 1:rep
             G(:,:,r) = myalign( GM, G(:,:,r) );
-            G(:,:,r) = sqrt( G(:,:,r) .* GM );
+            G(:,:,r) = sign( G(:,:,r) ) .* sqrt( abs(G(:,:,r) .* GM) );
         end
         R(:,:,g) = GM;
     end
