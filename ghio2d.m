@@ -29,9 +29,10 @@ function R = ghio2d(Fabs, S, n, gen, rep, checker, alpha)
         end
         % find the best replica
         [min_ef, min_ind] = min(efs);
-        disp(['replica0 #' int2str(min_ind) ' selected (EF = ' num2str(min_ef) ')']);
+        disp(['replica #' int2str(min_ind) ' selected (EF = ' num2str(min_ef) ')']);
         GM = G(:,:,min_ind);
         R(:,:,g) = GM;
+        disp('===========================================================');
     end
    
 
