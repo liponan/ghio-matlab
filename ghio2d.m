@@ -1,6 +1,6 @@
 % 2-D Guided-HIO written by Po-Nan Li @ Academia Sinica 2012
 % Reference: Chen et al., Phys. Rev. B. 76, 064113 (2007).
-function R = ghio2d(Fabs, S, n, gen, rep, checker, alpha)
+function [R, G] = ghio2d(Fabs, S, n, gen, rep, checker, alpha)
     R = zeros(size(Fabs,1), size(Fabs,2), gen);
     G = zeros(size(Fabs,1), size(Fabs,2), rep);
     FG = zeros(size(Fabs,1), size(Fabs,2), rep);
