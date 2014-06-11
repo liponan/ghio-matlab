@@ -3,6 +3,7 @@
 function R = ghio2d(Fabs, S, n, gen, rep, checker, alpha)
     R = zeros(size(Fabs,1), size(Fabs,2), gen);
     G = zeros(size(Fabs,1), size(Fabs,2), rep);
+    FG = zeros(size(Fabs,1), size(Fabs,2), rep);
     efs = zeros(rep, 1);
     sh = floor(sqrt(numel(find(S==1)))/2); % maximun shift
     for g = 1:gen
@@ -13,21 +14,18 @@ function R = ghio2d(Fabs, S, n, gen, rep, checker, alpha)
             end
         else
             parfor r = 1:rep
+                G(:,:,r) = myalign( GM, G(:,:,r) );
+                G(:,:,r) = sign( G(:,:,r) ) .* sqrt( abs(G(:,:,r) .* GM) );
                 G(:,:,r) = hio2d(fft2(G(:,:,r)), S, n, checker, alpha);
+                FG(:,:,r) = fft2( G(:,:,r) );
+                efs(r) = ef(Fabs, FG(:,:,r), checker);
             end
         end
-        FG = fft2(G);
-        for r = 1:rep
-            efs(r) = ef(Fabs, FG(:,:,r), checker);
-        end
+        % find the best replica
         [min_ef, min_ind] = min(efs);
         disp(['replica1 #' int2str(min_ind) ' selected (EF = ' num2str(min_ef) ')']);
         GM = G(:,:,min_ind);
         GM(GM<0) = 0;
-        parfor r = 1:rep
-            G(:,:,r) = myalign( GM, G(:,:,r) );
-            G(:,:,r) = sign( G(:,:,r) ) .* sqrt( abs(G(:,:,r) .* GM) );
-        end
         R(:,:,g) = GM;
     end
    
