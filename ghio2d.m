@@ -25,7 +25,7 @@ function R = ghio2d(Fabs, S, n, gen, rep, checker, alpha)
         GM = G(:,:,min_ind);
         GM(GM<0) = 0;
         parfor r = 1:rep
-            G(:,:,r) = align2(GM, G(:,:,r), sh);
+            G(:,:,r) = myalign( GM, G(:,:,r) );
             G(:,:,r) = sqrt( G(:,:,r) .* GM );
         end
         R(:,:,g) = GM;
