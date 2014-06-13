@@ -23,7 +23,10 @@ function [R, G, efs] = ghio2d(Fabs, S, n, gen, rep, checker, alpha)
                 G(:,:,r) = sign( GM ) .* sqrt( abs(G(:,:,r) .* GM) );
                 % run independent HIO
                 G(:,:,r) = hio2d(fft2(G(:,:,r)), S, n, checker, alpha);
-                FG(:,:,r) = fft2( G(:,:,r) );
+                % additional treat to FG
+                FG(:,:,r) = G(:,:,r);
+                FG(:,:,r) = FG(:,:,r) .* S;
+                FG(:,:,r) = fft2( FG(:,:,r) );
                 efs(g,r) = ef(Fabs, FG(:,:,r), checker);
             end
         end
