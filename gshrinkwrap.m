@@ -89,6 +89,7 @@ for g = 1:gen
         % run hio
         Rtmp(:,:,r) = hio2d(fft2(Rtmp(:,:,r)), Stmp(:,:,r), n2, checker, alpha);
         % Fourier transform for EF
+        Ftmp(:,:,r) = Rtmp(:,:,r) .* Stmp(:,:,r);
         Ftmp(:,:,r) = fft2( Rtmp(:,:,r) );
         efs(r) = ef(Fabs, Ftmp(:,:,r), checker), 
     end
