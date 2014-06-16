@@ -11,7 +11,7 @@
 % v.2 2014/06/06 : multiple following runs
 % v.3 2014/06/09 : use "template" to update each replica
 
-function [R, Sup, Rtmp] = gshrinkwrap(Fabs, n, checker, gen, n2, rep, varargin) 
+function [R, Sup, Rtmp, efs] = gshrinkwrap(Fabs, n, checker, gen, n2, rep, varargin) 
 
 
 % default parameters;
@@ -48,14 +48,14 @@ Rtmp = zeros( size(Fabs, 1), size(Fabs, 2), rep);
 Ftmp = zeros( size(Fabs, 1), size(Fabs, 2), rep);
 Mtmp = zeros( size(Fabs, 1), size(Fabs, 2), rep);
 Stmp = false( size(Fabs, 1), size(Fabs, 2), rep);
-efs = zeros(1, rep);
+efs = zeros(gen+1, rep);
 
 
 % first run with initial support from auto-correlation map
 parfor r = 1:rep
     Rtmp(:,:,r) = hio2d(Fabs, S, n, checker, alpha);
     Ftmp(:,:,r) = fft2( Rtmp(:,:,r) );
-    efs(r) = ef(Fabs, Ftmp(:,:,r), checker), 
+    efs(1,r) = ef(Fabs, Ftmp(:,:,r), checker), 
 end
 
 % select best replica
@@ -91,7 +91,7 @@ for g = 1:gen
         % Fourier transform for EF
         Ftmp(:,:,r) = Rtmp(:,:,r) .* Stmp(:,:,r);
         Ftmp(:,:,r) = fft2( Rtmp(:,:,r) );
-        efs(r) = ef(Fabs, Ftmp(:,:,r), checker), 
+        efs(g+1,r) = ef(Fabs, Ftmp(:,:,r), checker), 
     end
     % EF analysis
     [my, mx] = min(efs);
