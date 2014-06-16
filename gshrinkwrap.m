@@ -72,8 +72,8 @@ rad = sqrt(X.^2 + Y.^2);
 
 
 % shrink-wrap
-for g = 1:gen
-    Rmodel = R(:,:,g);
+for g = 2:(gen+1)
+    Rmodel = R(:,:,g-1);
     % Rmodel( Rmodel < 0 ) = 0; % just in case
     % Rtmp( Rtmp < 0 ) = 0;
     
@@ -91,14 +91,14 @@ for g = 1:gen
         % Fourier transform for EF
         Ftmp(:,:,r) = Rtmp(:,:,r) .* Stmp(:,:,r);
         Ftmp(:,:,r) = fft2( Rtmp(:,:,r) );
-        efs(g+1,r) = ef(Fabs, Ftmp(:,:,r), checker), 
+        efs(g,r) = ef(Fabs, Ftmp(:,:,r), checker), 
     end
     % EF analysis
     [my, mx] = min(efs);
     disp(['after generation ' int2str(g) ':']);
     disp(['replica #' int2str(mx) ' with EF = ' num2str(my) ' selected']);
-    R(:,:,g+1) = Rtmp(:,:,mx);
-    Sup(:,:,g+1) = Stmp(:,:,mx);
+    R(:,:,g) = Rtmp(:,:,mx);
+    Sup(:,:,g) = Stmp(:,:,mx);
     % smaller the kernel size
     if sig > 1.5
         sig = sig * 0.99;
