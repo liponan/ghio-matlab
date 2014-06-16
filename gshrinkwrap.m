@@ -59,7 +59,7 @@ parfor r = 1:rep
 end
 
 % select best replica
-[my, mx] = min(efs);
+[my, mx] = min(efs(1,:));
 disp('seed:');
 disp(['replica #' int2str(mx) ' with EF = ' num2str(my) ' selected']);
 R(:,:,1) = Rtmp(:,:,mx);
@@ -94,7 +94,7 @@ for g = 2:(gen+1)
         efs(g,r) = ef(Fabs, Ftmp(:,:,r), checker), 
     end
     % EF analysis
-    [my, mx] = min(efs);
+    [my, mx] = min(efs(g,:));
     disp(['after generation ' int2str(g) ':']);
     disp(['replica #' int2str(mx) ' with EF = ' num2str(my) ' selected']);
     R(:,:,g) = Rtmp(:,:,mx);
