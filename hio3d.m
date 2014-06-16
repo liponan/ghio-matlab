@@ -1,29 +1,25 @@
-function R = hio3d(Fabs, S, n, checker)
+% 3-D HIO written by Po-Nan Li @ Academia Sinica 2012
+function R = hio3d(Fabs, S, n, varargin)
 
-
-    
     beta1 = 0.9;
     
-    if numel(checker) > 0
-        check = 1;
+    if isempty(varargin)
+        unknown = false(size(Fabs));
     else
-        check = 0;
+        unknown = varargin{1};
     end
 
-    if sum(sum(sum(abs(imag(Fabs))))) == 0
+    if sum(abs(imag( Fabs(:) ))) == 0
         ph_init = rand(size(Fabs));
-    %         ph_init = (ph_init + rot90(ph_init, 2) ) ./2;
         ph_init = angle(fftn(ph_init));
-        F = Fabs .* exp(1j.*ph_init);
+        F = Fabs .* exp(1j*ph_init);
     else
         F = Fabs;
     end
 
-    
     F0 = abs(F);
-
-    
     previous = ifftn(F, 'symmetric');
+
     % ================ iterations ==================================
     for t = 1:n
 
@@ -35,11 +31,9 @@ function R = hio3d(Fabs, S, n, checker)
         rs(cond1) = previous(cond1) - beta1 .* rs(cond1);
         previous = rs;
 
-        F2 = fftn(rs);% .* exp(-1j.*(U+V));
-        F = F0 .* exp(1j.*angle(F2));
-        if check
-            F(checker) = F2(checker);
-        end
+        F2 = fftn(rs);
+        F = F0 .* exp(1j*angle(F2));
+        F(unknown) = F2(unknown);
     end
         % ================ iterations ends here  ==================================
     R = ifftn(F, 'symmetric');
