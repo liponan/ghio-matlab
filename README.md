@@ -10,15 +10,44 @@ This Matlab function set consists of some useful functions for phase retrival an
 # Function usage
 
 ## hio2d.m
-
 Developed by Fienup [1], well known and widely used algorithm for XCDI resarch.Supports oversampling smoothness develped by Miao's group [2].
+
+### Syntax
+```
+function R = hio2d(Fabs, S, n)
+function R = hio2d(Fabs, S, n, ukwn, alpha)
+```
 
 ## ghio.m
 Developed by Chien-Chun Chen *et al*. when he was in Institute of Physics in Academia Sinica [3].
 
-## shrinkwrap.m
+### Syntax
+```
+function R = ghio2d(Fabs, S, n, gen, rep, checker, alpha)
+function [R, G, efs] = ghio2d(Fabs, S, n, gen, rep, checker, alpha)
+```
 
+
+## shrinkwrap.m
 Developed by S. Marchesini *et al*. [4].
+
+### Syntax
+```
+gshrinkwrap(Fabs, n1, uknwn, gen, n2);
+gshrinkwrap(Fabs, n1, ukwn, gen, n2, alpha);
+gshrinkwrap(Fabs, n1, ukwn, gen, n2, alpha, sigma, cutoff1, cutoff2);
+```
+
+
+## gshrinkwrap.m
+
+### Syntax
+```
+gshrinkwrap(Fabs, n1, uknwn, gen, n2, rep);
+gshrinkwrap(Fabs, n1, ukwn, gen, n2, rep, alpha);
+gshrinkwrap(Fabs, n1, ukwn, gen, n2, rep, alpha, sigma, cutoff1, cutoff2);
+```
+
 
 # References
 
