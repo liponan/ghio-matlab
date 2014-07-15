@@ -19,4 +19,4 @@ end
 Sup = false(img_h, img_w);
 Sup(1:sp_h, 1:sp_w) = true;
 
-Sup = circshift(Sup, [round((img_h-sp_h)/2) round((img_h-sp_h)/2)]);
+Sup = circshift(Sup, [round((img_h-sp_h)/2) round((img_w-sp_w)/2)]);
