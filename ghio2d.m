@@ -13,14 +13,17 @@ function [R, G, efs] = ghio2d(Fabs, S, n, gen, rep, checker, alpha)
         if g == 1
             parfor r = 1:rep
                 G(:,:,r) = hio2d(Fabs, S, n, checker, alpha);
-                FG(:,:,r) = fft2( G(:,:,r) );
+                % additional treat to FG
+                FG(:,:,r) = G(:,:,r);
+                FG(:,:,r) = FG(:,:,r) .* S;
+                FG(:,:,r) = fft2( FG(:,:,r) );
                 efs(g,r) = ef(Fabs, FG(:,:,r), checker);
             end
         else
             parfor r = 1:rep
                 % make new template
                 G(:,:,r) = myalign( GM, G(:,:,r) );
-                G(:,:,r) = sign( GM ) .* sqrt( abs(G(:,:,r) .* GM) );
+                G(:,:,r) = sign( G(:,:,r) ) .* sqrt( abs(G(:,:,r) .* GM) );
                 % run independent HIO
                 G(:,:,r) = hio2d(fft2(G(:,:,r)), S, n, checker, alpha);
                 % additional treat to FG
